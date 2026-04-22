@@ -359,8 +359,8 @@
 
       <div class="ai-input-area">
         <div class="ai-input-row">
-          <textarea class="ai-input" id="chatInput" placeholder="Ask a follow-up question…" rows="1"></textarea>
-          <button class="send-btn" id="sendBtn" onclick="sendFollowUp()">
+          <textarea class="ai-input" id="chatInput" placeholder="Ask a follow-up question…" rows="1" disabled></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendFollowUp()" disabled>
             <svg width="13" height="13" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
@@ -507,6 +507,7 @@ async function handleCheck() {
       // Perfect — lock email, unlock continue
       lockEmail();
       addAiBubble(data.message);
+      unlockChat();
       showContinue();
     } else if (data.offerFinish) {
       // Offer finish or keep going
@@ -561,6 +562,7 @@ async function handleFinish() {
     });
     const data = await res.json();
     addAiBubbleWithNextEmail(data.message);
+    unlockChat();
   } catch {
     addAiBubble('Could not reach the coach. Please try again.');
   } finally {
@@ -588,6 +590,7 @@ function loadEmail2() {
     <div class="typing" id="typingIndicator"><span></span><span></span><span></span></div>`;
 
   // Reset state
+  lockChat();
   document.getElementById('inputHint').textContent = 'Click Check to activate the coach.';
   document.getElementById('continueBtn').style.display = 'none';
   document.getElementById('checkBtn').style.display = 'inline-block';
@@ -618,6 +621,7 @@ async function sendFollowUp() {
   messages.push({ role: 'user', content: text });
   input.value = '';
   showTyping(true);
+  lockChat();
 
   try {
     const res  = await fetch('/api/followup', {
@@ -632,6 +636,7 @@ async function sendFollowUp() {
     addAiBubble('Error. Please try again.');
   } finally {
     showTyping(false);
+    unlockChat();
   }
 }
 
@@ -712,6 +717,17 @@ function showTyping(show) {
 function scrollThread() {
   const t = document.getElementById('aiMessages');
   t.scrollTop = t.scrollHeight;
+}
+
+function unlockChat() {
+  document.getElementById('chatInput').disabled = false;
+  document.getElementById('sendBtn').disabled   = false;
+  document.getElementById('inputHint').textContent = 'Ask a follow-up question about this email.';
+}
+
+function lockChat() {
+  document.getElementById('chatInput').disabled = true;
+  document.getElementById('sendBtn').disabled   = true;
 }
 
 function showContinue() {
