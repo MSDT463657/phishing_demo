@@ -50,9 +50,8 @@ What they have flagged so far:
 ${flaggedItems.map((item, i) => `${i + 1}. ${item}`).join('\n')}
 
 They are missing ${missedCount} indicator(s). Do NOT name or describe what they missed.
-Give one short encouraging nudge hinting at where to look — no answers.
-Reference the lesson if helpful — e.g. "Think back to what you learned about sender details."
-End with a short question like "Is there anything else in this email that strikes you as odd?"
+If the learner has mentioned something specific in chat — a link, a word, a field — stay on that exact topic and push them deeper into it. Do not change the subject.
+Give one short encouraging nudge and ask one focused follow-up question about exactly what they just raised.
 2-3 sentences maximum.`;
   }
 
